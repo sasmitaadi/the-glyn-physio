@@ -85,7 +85,8 @@
   function setup() {
     const current = localStorage.getItem("glyn-language") || "id";
     const next = current === "en" ? "id" : "en";
-    document.querySelectorAll("header nav").forEach((nav) => {
+    const switcher = document.querySelector("#language-switcher");
+    if (switcher) {
       const button = document.createElement("button");
       button.type = "button";
       button.className = "language-toggle rounded-full border border-ink/20 px-3 py-2 text-xs font-bold";
@@ -95,8 +96,8 @@
         localStorage.setItem("glyn-language", next);
         location.reload();
       });
-      nav.appendChild(button);
-    });
+      switcher.appendChild(button);
+    }
     replaceText(current);
   }
 
