@@ -207,3 +207,10 @@ else if (route.endsWith("/article/")) articlesPage();
 else if (route.endsWith("/about-us/")) aboutPage();
 else if (route.endsWith("/our-clinics/")) clinicsPage();
 else homePage();
+
+const siteScript = document.querySelector('script[src$="site.js"]');
+if (siteScript) {
+  const languageScript = document.createElement("script");
+  languageScript.src = new URL("language.js", siteScript.src).href;
+  document.body.appendChild(languageScript);
+}

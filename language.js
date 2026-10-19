@@ -83,19 +83,20 @@
   }
 
   function setup() {
-    const current = localStorage.getItem("glyn-language") || "en";
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "language-toggle rounded-full border border-ink/20 px-3 py-2 text-xs font-bold";
-    button.textContent = current === "en" ? "ID" : "EN";
-    button.setAttribute("aria-label", "Switch language");
-    button.addEventListener("click", () => {
-      const next = localStorage.getItem("glyn-language") === "en" ? "id" : "en";
-      localStorage.setItem("glyn-language", next);
-      location.reload();
+    const current = localStorage.getItem("glyn-language") || "id";
+    const next = current === "en" ? "id" : "en";
+    document.querySelectorAll("header nav").forEach((nav) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "language-toggle rounded-full border border-ink/20 px-3 py-2 text-xs font-bold";
+      button.textContent = current === "en" ? "ID" : "EN";
+      button.setAttribute("aria-label", `Switch to ${next === "en" ? "English" : "Indonesian"}`);
+      button.addEventListener("click", () => {
+        localStorage.setItem("glyn-language", next);
+        location.reload();
+      });
+      nav.appendChild(button);
     });
-    const nav = document.querySelector("header nav");
-    if (nav) nav.appendChild(button);
     replaceText(current);
   }
 
