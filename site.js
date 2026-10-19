@@ -29,8 +29,14 @@ const articles = {
 
 const path = location.pathname.replace(/\\/g, "/");
 const route = path.replace(/index\.html$/, "");
-const isNestedDetail = /\/(services|article)\/[^/]+\/?$/.test(route);
-const base = route === "/" || route.endsWith("/glynphysioubud/") ? "" : isNestedDetail ? "../../" : "../";
+const normalizedRoute = route.endsWith("/") ? route : `${route}/`;
+const siteSections = new Set(["about-us", "our-clinics", "services", "article"]);
+const firstPathSegment = path.split("/").filter(Boolean)[0];
+const isProjectPages = location.protocol !== "file:" && firstPathSegment && !siteSections.has(firstPathSegment);
+const isLocalProjectRoot = location.protocol === "file:" && normalizedRoute.endsWith("/glynphysioubud/");
+const isProjectRoot = (isProjectPages && normalizedRoute === `/${firstPathSegment}/`) || isLocalProjectRoot;
+const isNestedDetail = /\/(services|article)\/[^/]+\/?$/.test(normalizedRoute);
+const base = normalizedRoute === "/" || isProjectRoot ? "" : isNestedDetail ? "../../" : "../";
 
 function header() {
   const active = route.includes("/services/") ? "services" : route.includes("/article/") ? "article" : route.endsWith("/about-us/") ? "about" : "home";
