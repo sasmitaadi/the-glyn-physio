@@ -32,7 +32,7 @@
     "Diskusikan kebutuhan Anda →": "Discuss your needs →",
     "The Glyn Physio": "The Glyn Physio",
     "Senin - Sabtu, 08.00 - 20.00": "Monday - Saturday, 08:00 - 20:00",
-    "Jakarta & sekitarnya · hello@theglynphysio.com": "Jakarta and surroundings · hello@theglynphysio.com",
+    "Ubud & sekitarnya · hello@theglynphysio.com": "Ubud and surroundings · hello@theglynphysio.com",
     "Tanyakan jadwal →": "Ask about availability →",
     "Temukan lokasi yang dekat dengan Anda.": "Find a location near you.",
     "Klinik kami": "Our clinics",

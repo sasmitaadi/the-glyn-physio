@@ -9,7 +9,13 @@ body.modal-open { overflow: hidden; }
 .media-cover img { transition: transform .45s ease; }
 .media-cover:hover img { transform: scale(1.035); }
 .play-button { box-shadow: 0 12px 34px rgba(18,50,74,.24); }
+.review-carousel { scrollbar-width: thin; scrollbar-color: rgba(142,217,245,.75) transparent; }
+.review-carousel::-webkit-scrollbar { height: .45rem; }
+.review-carousel::-webkit-scrollbar-track { background: transparent; }
+.review-carousel::-webkit-scrollbar-thumb { border: .12rem solid transparent; border-radius: 999px; background: rgba(142,217,245,.75); background-clip: padding-box; }
+.review-carousel::-webkit-scrollbar-thumb:hover { background: #8ed9f5; background-clip: padding-box; }
 .video-modal { animation: modal-in .18s ease-out; }
+.video-modal .play-button { animation: play-pulse 2.2s ease-in-out infinite; }
 .nav-link { position: relative; padding-block: .65rem; transition: color .18s ease; }
 .nav-link:hover, .nav-link.is-active { color: #1b78b4; }
 .nav-link.is-active::after { content: ""; position: absolute; left: 0; right: 0; bottom: .15rem; height: 2px; border-radius: 999px; background: #59bfe8; }
@@ -18,5 +24,6 @@ body.modal-open { overflow: hidden; }
 .whatsapp-pulse { width: .7rem; height: .7rem; border-radius: 999px; background: #fff; box-shadow: 0 0 0 5px rgba(255,255,255,.2); }
 :focus-visible { outline: 3px solid #59bfe8; outline-offset: 3px; }
 @keyframes modal-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes play-pulse { 0%, 100% { box-shadow: 0 12px 34px rgba(18,50,74,.24); } 50% { box-shadow: 0 12px 34px rgba(89,191,232,.5), 0 0 0 9px rgba(142,217,245,.12); } }
 @media (max-width: 420px) { .whatsapp-float span:last-child { display: none; } .whatsapp-float { width: 3.25rem; justify-content: center; padding-inline: 0; } }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .service-card, .media-cover img, .video-modal, .whatsapp-float { transition: none; animation: none; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .service-card, .media-cover img, .video-modal, .video-modal .play-button, .whatsapp-float { transition: none; animation: none; } }
