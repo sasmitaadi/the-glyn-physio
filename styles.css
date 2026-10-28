@@ -1,6 +1,7 @@
 html { scroll-behavior: smooth; }
 body { font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif; }
 body.modal-open { overflow: hidden; }
+.site-logo { mix-blend-mode: multiply; }
 .hero-grid { background-image: linear-gradient(rgba(27,120,180,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(27,120,180,.07) 1px, transparent 1px); background-size: 42px 42px; }
 .service-card { transition: transform .18s ease, box-shadow .18s ease; }
 .service-card:hover { transform: translateY(-5px); box-shadow: 0 20px 45px rgba(18,50,74,.12); }
@@ -15,6 +16,8 @@ body.modal-open { overflow: hidden; }
 .review-carousel::-webkit-scrollbar-thumb { border: .12rem solid transparent; border-radius: 999px; background: rgba(142,217,245,.75); background-clip: padding-box; }
 .review-carousel::-webkit-scrollbar-thumb:hover { background: #8ed9f5; background-clip: padding-box; }
 .video-modal { animation: modal-in .18s ease-out; }
+.video-modal-dialog { max-height: calc(100vh - 2rem); }
+.video-modal-player { height: min(78vh, 720px); }
 .video-modal .play-button { animation: play-pulse 2.2s ease-in-out infinite; }
 .nav-link { position: relative; padding-block: .65rem; transition: color .18s ease; }
 .nav-link:hover, .nav-link.is-active { color: #1b78b4; }
@@ -26,4 +29,5 @@ body.modal-open { overflow: hidden; }
 @keyframes modal-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes play-pulse { 0%, 100% { box-shadow: 0 12px 34px rgba(18,50,74,.24); } 50% { box-shadow: 0 12px 34px rgba(89,191,232,.5), 0 0 0 9px rgba(142,217,245,.12); } }
 @media (max-width: 420px) { .whatsapp-float span:last-child { display: none; } .whatsapp-float { width: 3.25rem; justify-content: center; padding-inline: 0; } }
+@media (max-width: 640px) { .video-modal-dialog { max-height: calc(100vh - 1.5rem); } .video-modal-player { height: calc(100vh - 6.5rem); min-height: 18rem; } }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .service-card, .media-cover img, .video-modal, .video-modal .play-button, .whatsapp-float { transition: none; animation: none; } }
