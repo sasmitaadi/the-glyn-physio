@@ -155,7 +155,7 @@ function setupAOS() {
 function serviceCards() {
   const cards = Object.entries(services).map(([slug, item]) => ({ ...item, href: `${base}services/${slug}/index.html`, linkLabel: "Selengkapnya" }));
   const additionalCards = additionalSpecializations.map(item => ({ ...item, cardTitle: item.title, href: `${base}contact/index.html`, linkLabel: "Konsultasi" }));
-  return [...cards, ...additionalCards].map(item => `<article class="service-card flex h-full flex-col">${videoThumb(item.video, item.cardTitle, "h-44 shrink-0 rounded-xl")}<div class="flex flex-1 flex-col pt-4"><h3 class="text-sm font-bold leading-5 text-ink">${item.cardTitle}</h3><p class="mt-2 text-sm leading-6 text-ink">${item.tagline}</p><p class="mt-1 text-xs leading-5 text-ink/55">${item.treatments.join(", ")}.</p><a class="mt-auto inline-flex items-center gap-1 pt-6 text-[11px] font-extrabold uppercase tracking-wider text-teal" href="${item.href}">${item.linkLabel} <span aria-hidden="true">❯</span></a></div></article>`).join("");
+  return [...cards, ...additionalCards].map(item => `<article class="service-card flex h-full flex-col rounded-3xl bg-white p-5 shadow-sm">${videoThumb(item.video, item.cardTitle, "h-44 shrink-0 rounded-xl")}<div class="flex flex-1 flex-col pt-4"><h3 class="text-sm font-bold leading-5 text-ink">${item.cardTitle}</h3><p class="mt-2 text-sm leading-6 text-ink">${item.tagline}</p><p class="mt-1 text-xs leading-5 text-ink/55">${item.treatments.join(", ")}.</p><a class="mt-auto inline-flex items-center gap-1 pt-6 text-[11px] font-extrabold uppercase tracking-wider text-teal" href="${item.href}">${item.linkLabel} <span aria-hidden="true">❯</span></a></div></article>`).join("");
 }
 
 function testimonialSection() {
@@ -205,7 +205,7 @@ function aboutPage() {
     ["Pelatihan", "Mengembalikan kekuatan, kontrol gerak, dan daya tahan tubuh secara bertahap.", "https://images.unsplash.com/photo-1530143311094-34d807799e8f?auto=format&fit=crop&w=900&q=82"]
   ];
   const team = [
-    ["Lead Physiotherapist", "Program pemulihan kompleks dan perencanaan terapi personal.", "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=800&q=82"],
+    ["Dewa Angga. S. Fis., Ftr., OMTC", "Lead Physiotherapist — program pemulihan kompleks dan perencanaan terapi personal.", `${base}assets/team1.jpg`],
     ["Fisioterapis Ortopedi", "Pemulihan cedera otot, sendi, serta kondisi pasca operasi.", "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=800&q=82"],
     ["Fisioterapis Olahraga", "Kembali berlatih dan berolahraga dengan aman dan terukur.", "https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&w=800&q=82"],
     ["Fisioterapis Geriatri", "Mobilitas, keseimbangan, dan kemandirian pasien lanjut usia.", "https://images.unsplash.com/photo-1584982751601-97dcc096659c?auto=format&fit=crop&w=800&q=82"]
