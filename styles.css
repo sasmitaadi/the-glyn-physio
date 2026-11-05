@@ -2,6 +2,7 @@ html { scroll-behavior: smooth; }
 body { font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif; }
 body.modal-open { overflow: hidden; }
 .site-logo { mix-blend-mode: multiply; }
+.gtranslate_wrapper { position: relative; z-index: 70; }
 .hero-grid { background-image: linear-gradient(rgba(27,120,180,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(27,120,180,.07) 1px, transparent 1px); background-size: 42px 42px; }
 .service-card { transition: transform .18s ease, box-shadow .18s ease; }
 .service-card:hover { transform: translateY(-5px); box-shadow: 0 20px 45px rgba(18,50,74,.12); }
