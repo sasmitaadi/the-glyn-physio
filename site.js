@@ -207,8 +207,8 @@ function aboutPage() {
   const team = [
     ["Dewa Angga. S. Fis., Ftr., OMTC", "Lead Physiotherapist — program pemulihan kompleks dan perencanaan terapi personal.", `${base}assets/team1.jpg`],
     ["Ni Kadek Ari Kusuma Dewi, S.Kes., Ftr.", "Pemulihan cedera otot, sendi, serta kondisi pasca operasi.", `${base}assets/team2.png`],
-    ["Fisioterapis Olahraga", "Kembali berlatih dan berolahraga dengan aman dan terukur.", "https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&w=800&q=82"],
-    ["Fisioterapis Geriatri", "Mobilitas, keseimbangan, dan kemandirian pasien lanjut usia.", "https://images.unsplash.com/photo-1584982751601-97dcc096659c?auto=format&fit=crop&w=800&q=82"]
+    ["Ida Bagus Gde Putra Keniten, S.Kes., Ftr", "Manual therapy, musculoskeletal, dan sport therapy.", `${base}assets/team3.png`],
+    ["Dewa Ayu Krisnika, S.Kes., Ftr.", "Rehabilitasi post-op dan geriatri.", `${base}assets/team4.png`]
   ];
   const equipment = [
     ["Ultrasound Therapy", "Mendukung penanganan jaringan sesuai indikasi.", "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=900&q=82"],
