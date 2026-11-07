@@ -206,7 +206,7 @@ function aboutPage() {
   ];
   const team = [
     ["Dewa Angga. S. Fis., Ftr., OMTC", "Lead Physiotherapist — program pemulihan kompleks dan perencanaan terapi personal.", `${base}assets/team1.jpg`],
-    ["Fisioterapis Ortopedi", "Pemulihan cedera otot, sendi, serta kondisi pasca operasi.", "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=800&q=82"],
+    ["Ni Kadek Ari Kusuma Dewi, S.Kes., Ftr.", "Pemulihan cedera otot, sendi, serta kondisi pasca operasi.", `${base}assets/team2.png`],
     ["Fisioterapis Olahraga", "Kembali berlatih dan berolahraga dengan aman dan terukur.", "https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&w=800&q=82"],
     ["Fisioterapis Geriatri", "Mobilitas, keseimbangan, dan kemandirian pasien lanjut usia.", "https://images.unsplash.com/photo-1584982751601-97dcc096659c?auto=format&fit=crop&w=800&q=82"]
   ];
