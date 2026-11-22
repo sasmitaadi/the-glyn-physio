@@ -23,7 +23,7 @@ Kredensial awal dashboard:
 - Email: `admin@theglynphysio.com`
 - Kata sandi: `GlynLaunch2026!`
 
-Segera ubah kata sandi lewat menu **Pengguna** setelah login pertama. Untuk server produksi, koneksi database dapat diatur memakai `GLYN_DB_DSN`, `GLYN_DB_USER`, dan `GLYN_DB_PASSWORD`.
+Segera ubah kata sandi lewat menu **Pengguna** setelah login pertama. Untuk server produksi, koneksi database dapat diatur memakai `GLYN_DB_DSN`, `GLYN_DB_USER`, dan `GLYN_DB_PASSWORD` sebagai environment variable server atau dalam file `.env` yang disalin dari `.env.example`. Environment variable server selalu diprioritaskan.
 
 Pastikan folder `uploads/` dapat ditulis oleh PHP. Instalasi lama dapat menjalankan migration pada folder `database/`, termasuk `migrate_service_management.sql`, masing-masing satu kali sesuai versi yang belum pernah diterapkan.
 

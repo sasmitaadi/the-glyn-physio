@@ -81,7 +81,7 @@ function getGoogleReviewSettings(PDO $pdo, bool $forceRefresh = false): array
         $pdo->exec("INSERT INTO google_review_settings (id,mode,rating,review_count) VALUES (1,'manual',5.0,0)");
         $settings = $pdo->query('SELECT * FROM google_review_settings WHERE id=1')->fetch();
     }
-    $apiKey = trim((string) getenv('GLYN_GOOGLE_PLACES_API_KEY'));
+    $apiKey = trim(glynEnv('GLYN_GOOGLE_PLACES_API_KEY'));
     $lastCheck = $settings['last_synced_at'] ?: $settings['updated_at'];
     $stale = !$lastCheck || strtotime($lastCheck) < time() - 43200;
     if ($settings['mode'] === 'auto' && $apiKey && $settings['place_id'] && ($forceRefresh || $stale)) {

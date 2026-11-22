@@ -12,7 +12,7 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(article|services)/[^/]+(?:/index\.html)?$ index.html [L]
 
-<FilesMatch "^(README\.md)$">
+<FilesMatch "^(README\.md|\.env(?:\..*)?)$">
   <IfModule mod_authz_core.c>
     Require all denied
   </IfModule>

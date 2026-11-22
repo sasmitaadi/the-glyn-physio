@@ -1,6 +1,56 @@
 <?php
 declare(strict_types=1);
 
+/**
+ * Read a value from the server environment or the local .env file.
+ *
+ * Server environment variables take precedence so the same code works on
+ * managed infrastructure as well as shared hosting.
+ */
+function glynEnv(string $key, string $default = ''): string
+{
+    $serverValue = getenv($key);
+    if ($serverValue !== false) {
+        return (string) $serverValue;
+    }
+
+    static $fileValues;
+    if (!is_array($fileValues)) {
+        $fileValues = [];
+        $envFile = __DIR__ . '/.env';
+
+        if (is_readable($envFile)) {
+            $lines = file($envFile, FILE_IGNORE_NEW_LINES);
+            foreach ($lines ?: [] as $line) {
+                $line = trim($line);
+                if ($line === '' || strpos($line, '#') === 0 || strpos($line, '=') === false) {
+                    continue;
+                }
+
+                [$name, $value] = explode('=', $line, 2);
+                $name = trim($name);
+                $value = trim($value);
+                if (!preg_match('/^[A-Z_][A-Z0-9_]*$/i', $name)) {
+                    continue;
+                }
+
+                $length = strlen($value);
+                if ($length >= 2) {
+                    $first = $value[0];
+                    $last = $value[$length - 1];
+                    if (($first === '"' && $last === '"') || ($first === "'" && $last === "'")) {
+                        $value = substr($value, 1, -1);
+                    }
+                }
+
+                $fileValues[$name] = $value;
+            }
+        }
+    }
+
+    return array_key_exists($key, $fileValues) ? (string) $fileValues[$key] : $default;
+}
+
 function db(): PDO
 {
     static $pdo;
@@ -9,9 +59,9 @@ function db(): PDO
     }
 
     $pdo = new PDO(
-        getenv('GLYN_DB_DSN') ?: 'mysql:host=127.0.0.1;dbname=glyn_physio;charset=utf8mb4',
-        getenv('GLYN_DB_USER') ?: 'root',
-        getenv('GLYN_DB_PASSWORD') ?: '',
+        glynEnv('GLYN_DB_DSN', 'mysql:host=127.0.0.1;dbname=glyn_physio;charset=utf8mb4'),
+        glynEnv('GLYN_DB_USER', 'root'),
+        glynEnv('GLYN_DB_PASSWORD'),
         [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_EMULATE_PREPARES => false,
