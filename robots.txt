@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api.php
+Disallow: /analytics.php
+Disallow: /database/
+Disallow: /config.php
+
+Sitemap: https://theglynphysio.com/sitemap.xml

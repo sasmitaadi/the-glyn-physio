@@ -1,0 +1,51 @@
+stages:
+  - test
+  - deploy
+
+default:
+  interruptible: true
+
+php_syntax:
+  stage: test
+  image: php:8.2-cli-alpine
+  script:
+    - find . -type f -name '*.php' -not -path './.git/*' -print0 | xargs -0 -n1 php -l
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH'
+
+javascript_syntax:
+  stage: test
+  image: node:20-alpine
+  script:
+    - find . -type f -name '*.js' -not -path './.git/*' -print0 | xargs -0 -n1 node --check
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH'
+
+deploy_production:
+  stage: deploy
+  image: alpine:3.20
+  resource_group: production
+  environment:
+    name: production
+    url: $DEPLOY_URL
+  before_script:
+    - apk add --no-cache openssh-client rsync
+    - install -m 700 -d ~/.ssh
+    - if [ -f "$SSH_PRIVATE_KEY" ]; then cp "$SSH_PRIVATE_KEY" ~/.ssh/id_deploy; else printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_deploy; fi
+    - chmod 600 ~/.ssh/id_deploy
+    - printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+    - chmod 600 ~/.ssh/known_hosts
+  script:
+    - test -n "$DEPLOY_HOST" && test -n "$DEPLOY_USER" && test -n "$DEPLOY_PATH"
+    - ssh -i ~/.ssh/id_deploy -p "${DEPLOY_PORT:-22}" "${DEPLOY_USER}@${DEPLOY_HOST}" "mkdir -p '${DEPLOY_PATH%/}/uploads' '${DEPLOY_PATH%/}/database/sessions' && chmod 775 '${DEPLOY_PATH%/}/uploads' '${DEPLOY_PATH%/}/database/sessions'"
+    - rsync -az --checksum --human-readable --exclude='.git/' --exclude='.gitlab-ci.yml' --exclude='.audit/' --exclude='.env' --exclude='.env.*' --exclude='start-local.cmd' --exclude='start-local.ps1' -e "ssh -i ~/.ssh/id_deploy -p ${DEPLOY_PORT:-22}" ./ "${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH%/}/"
+  after_script:
+    - rm -f ~/.ssh/id_deploy
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+  needs:
+    - php_syntax
+    - javascript_syntax
+

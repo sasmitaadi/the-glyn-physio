@@ -1,0 +1,23 @@
+# Runtime data dan rahasia lokal
+.env
+.env.*
+!.env.example
+
+# Session PHP tidak boleh masuk repository
+database/sessions/*
+!database/sessions/.gitkeep
+
+# File upload pengguna disimpan permanen di server
+uploads/*
+!uploads/.gitkeep
+!uploads/.htaccess
+
+# Hasil pemeriksaan lokal
+.audit/
+
+# File editor dan sistem operasi
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
