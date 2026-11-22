@@ -516,11 +516,19 @@ try {
     }
 
     if ($action === 'analytics' && $method === 'GET') {
-        $counts = $pdo->query("SELECT event_name,COUNT(*) total FROM analytics_events WHERE created_at>=DATE_SUB(NOW(),INTERVAL 30 DAY) GROUP BY event_name")->fetchAll();
-        $events = $pdo->query("SELECT event_name,event_label,page_path,COUNT(*) total FROM analytics_events WHERE created_at>=DATE_SUB(NOW(),INTERVAL 30 DAY) GROUP BY event_name,event_label,page_path ORDER BY total DESC LIMIT 20")->fetchAll();
-        $daily = $pdo->query("SELECT DATE(created_at) day,COUNT(*) total FROM analytics_events WHERE event_name='page_view' AND created_at>=DATE_SUB(CURDATE(),INTERVAL 29 DAY) GROUP BY DATE(created_at) ORDER BY day")->fetchAll();
-        $visitors = (int) $pdo->query("SELECT COUNT(DISTINCT visitor_id) FROM analytics_events WHERE event_name='page_view' AND created_at>=DATE_SUB(NOW(),INTERVAL 30 DAY)")->fetchColumn();
-        jsonResponse(['ok' => true, 'visitors' => $visitors, 'counts' => $counts, 'events' => $events, 'daily' => $daily]);
+        $period = (int) ($_GET['period'] ?? 30);
+        if (!in_array($period, [7, 30, 365], true)) $period = 30;
+        $intervalDays = $period - 1;
+        $dateFilter = "created_at>=DATE_SUB(CURDATE(),INTERVAL {$intervalDays} DAY)";
+        $counts = $pdo->query("SELECT event_name,COUNT(*) total FROM analytics_events WHERE {$dateFilter} GROUP BY event_name")->fetchAll();
+        $events = $pdo->query("SELECT event_name,event_label,page_path,COUNT(*) total FROM analytics_events WHERE {$dateFilter} GROUP BY event_name,event_label,page_path ORDER BY total DESC LIMIT 20")->fetchAll();
+        if ($period === 365) {
+            $daily = $pdo->query("SELECT DATE_FORMAT(created_at,'%Y-%m') day,COUNT(*) total FROM analytics_events WHERE event_name='page_view' AND {$dateFilter} GROUP BY DATE_FORMAT(created_at,'%Y-%m') ORDER BY day")->fetchAll();
+        } else {
+            $daily = $pdo->query("SELECT DATE(created_at) day,COUNT(*) total FROM analytics_events WHERE event_name='page_view' AND {$dateFilter} GROUP BY DATE(created_at) ORDER BY day")->fetchAll();
+        }
+        $visitors = (int) $pdo->query("SELECT COUNT(DISTINCT visitor_id) FROM analytics_events WHERE event_name='page_view' AND {$dateFilter}")->fetchColumn();
+        jsonResponse(['ok' => true, 'period' => $period, 'granularity' => $period === 365 ? 'month' : 'day', 'visitors' => $visitors, 'counts' => $counts, 'events' => $events, 'daily' => $daily]);
     }
 
     if ($action === 'users') {

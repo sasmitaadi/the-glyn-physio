@@ -90,18 +90,7 @@ let driveTestimonials = [
   ["video_20231030_095329.mp4", "1Vlyk0Y6HujwkPBnFJrbIuFfBDMHcPcMK"]
 ].map(([name, id]) => ({ name, id }));
 
-let articles = {
-  "nyeri-punggung": { title: "Memahami nyeri punggung dan cara mengelolanya", summary: "Nyeri punggung dapat dipengaruhi kebiasaan, beban, dan kapasitas tubuh. Kenali langkah aman untuk mulai bergerak kembali.", image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=1200&q=82", video: DEFAULT_VIDEO },
-  "cedera-lutut": { title: "Mengenal cedera lutut saat beraktivitas", summary: "Pendekatan bertahap dapat membantu mengembalikan fungsi lutut dan mengurangi kekhawatiran saat bergerak.", image: "https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=1200&q=82", video: DEFAULT_VIDEO },
-  keseimbangan: { title: "Latihan keseimbangan untuk aktivitas harian", summary: "Keseimbangan adalah kemampuan yang bisa dilatih, dimulai dari gerakan sederhana yang sesuai kondisi Anda.", image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=1200&q=82", video: "T-FQ2ckFnT0" },
-  "pemulihan-operasi": { title: "Panduan umum pemulihan setelah operasi", summary: "Pemulihan yang baik membutuhkan komunikasi, konsistensi, dan target realistis bersama fisioterapis.", image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1200&q=82", video: DEFAULT_VIDEO },
-  "cedera-olahraga": { title: "Kembali berolahraga setelah cedera", summary: "Kembali beraktivitas bukan hanya soal rasa nyeri, tetapi juga kesiapan kekuatan dan kontrol gerak.", image: "https://images.unsplash.com/photo-1530143311094-34d807799e8f?auto=format&fit=crop&w=1200&q=82", video: DEFAULT_VIDEO },
-  "postur-kerja": { title: "Postur kerja dan kebiasaan bergerak", summary: "Perubahan kecil pada posisi dan jeda bergerak dapat membuat aktivitas kerja terasa lebih nyaman.", image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=82", video: DEFAULT_VIDEO },
-  "nyeri-bahu": { title: "Mengatasi keterbatasan gerak bahu", summary: "Bahu membutuhkan kombinasi mobilitas, kontrol, dan kekuatan yang dilatih secara bertahap.", image: "https://images.unsplash.com/photo-1599058917212-d750089bc07e?auto=format&fit=crop&w=1200&q=82", video: "t26n0kA_zlE" },
-  "kaki-dan-pergelangan": { title: "Menjaga kesehatan kaki dan pergelangan", summary: "Kaki berperan penting dalam setiap langkah. Perawatan yang tepat membantu Anda tetap aktif.", image: "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&w=1200&q=82", video: DEFAULT_VIDEO },
-  "latihan-rumahan": { title: "Membangun rutinitas latihan di rumah", summary: "Rutinitas sederhana dan konsisten dapat mendukung hasil terapi di luar ruang klinik.", image: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1200&q=82", video: "T-FQ2ckFnT0" },
-  "konsultasi-pertama": { title: "Apa yang perlu disiapkan sebelum konsultasi?", summary: "Cerita keluhan, tujuan, dan pertanyaan Anda akan membantu sesi pertama berjalan lebih efektif.", image: "https://images.unsplash.com/photo-1666887361002-6e31f6e8e6c9?auto=format&fit=crop&w=1200&q=82", video: DEFAULT_VIDEO }
-};
+let articles = {};
 
 const path = location.pathname.replace(/\\/g, "/");
 const route = path.replace(/index\.html$/, "");
@@ -391,6 +380,7 @@ function therapySessionSection() {
 
 function homeArticlesSection() {
   const featuredArticles = Object.entries(articles).slice(0, 3).map(([slug, item]) => `<article class="service-card flex h-full flex-col overflow-hidden rounded-3xl bg-white shadow-sm"><a href="article/${slug}/index.html" class="block h-52 overflow-hidden"><img class="h-full w-full object-cover transition duration-500 hover:scale-105" src="${item.image}" alt="${item.title}" loading="lazy"></a><div class="flex flex-1 flex-col p-6"><p class="text-xs font-bold uppercase tracking-widest text-coral">Artikel pilihan</p><h3 class="mt-3 text-xl font-bold leading-7"><a href="article/${slug}/index.html">${item.title}</a></h3><p class="mt-3 text-sm leading-7 text-ink/60">${item.summary}</p><a class="mt-auto inline-flex pt-6 text-sm font-bold text-teal" href="article/${slug}/index.html">Baca selengkapnya →</a></div></article>`).join("");
+  if (!featuredArticles) return "";
   return `<section class="bg-white/55"><div class="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-24"><div class="flex flex-col justify-between gap-5 sm:flex-row sm:items-end"><div><p class="text-sm font-bold uppercase tracking-[.18em] text-coral">Artikel terbaru</p><h2 class="mt-4 max-w-3xl font-display text-4xl sm:text-5xl">Wawasan untuk mendukung perjalanan pemulihan.</h2></div><a class="text-sm font-bold text-teal" href="article/index.html">Lihat semua artikel →</a></div><div class="mt-10 grid gap-6 md:grid-cols-3">${featuredArticles}</div></div></section>`;
 }
 
@@ -515,7 +505,11 @@ function articlesPage() {
 }
 
 function articleDetail(slug) {
-  const item = articles[slug] || articles["nyeri-punggung"];
+  const item = articles[slug];
+  if (!item) {
+    shell('<section class="mx-auto max-w-4xl px-5 py-24 text-center lg:px-8"><p class="text-sm font-bold uppercase tracking-[.18em] text-coral">Artikel</p><h1 class="mt-4 font-display text-5xl">Artikel tidak ditemukan.</h1><p class="mt-5 text-ink/60">Artikel ini tidak tersedia atau belum dipublikasikan.</p><a class="mt-8 inline-flex rounded-full bg-teal px-6 py-3 text-sm font-bold text-white" href="../index.html">Kembali ke daftar artikel</a></section>', "Artikel tidak ditemukan");
+    return;
+  }
   shell(`<article class="mx-auto max-w-4xl px-5 py-16 lg:px-8 lg:py-20"><a class="text-sm font-bold text-teal" href="../index.html">← Kembali ke artikel</a><p class="mt-10 text-sm font-bold uppercase tracking-[.18em] text-coral">Insight kesehatan</p><h1 class="mt-4 font-display text-5xl leading-tight sm:text-6xl">${item.title}</h1><p class="mt-6 text-xl leading-9 text-ink/70">${item.summary}</p><a class="media-cover mt-10 block aspect-video rounded-3xl shadow-soft" href="https://www.youtube.com/watch?v=${item.video}" target="_blank" rel="noopener"><img class="h-full w-full object-cover" src="${item.image}" alt="${item.title}"><span class="play-button absolute left-1/2 top-1/2 z-10 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white text-xl text-teal">▶</span><span class="absolute bottom-5 left-6 z-10 font-bold text-white">Tonton video terkait di YouTube ↗</span></a><div class="mt-12 space-y-7 text-base leading-8 text-ink/75"><h2 class="font-display text-3xl text-ink">Mengapa hal ini perlu diperhatikan?</h2><p>Keluhan gerak sering dipengaruhi oleh beberapa hal sekaligus: beban aktivitas, kualitas istirahat, riwayat cedera, kekuatan, dan rasa percaya diri saat bergerak. Karena itu, satu latihan belum tentu cocok untuk setiap orang.</p><h2 class="font-display text-3xl text-ink">Langkah awal yang aman</h2><p>Mulailah dari aktivitas yang masih terasa nyaman, naikkan beban secara bertahap, dan catat respons tubuh setelahnya. Pemeriksaan tenaga profesional membantu menentukan prioritas dan dosis latihan yang lebih tepat.</p><div class="rounded-3xl bg-mint p-7"><b>Catatan penting</b><p class="mt-2 text-sm leading-7">Materi ini bersifat edukatif dan bukan pengganti diagnosis. Segera cari pertolongan medis bila keluhan berat, muncul mendadak, atau disertai gejala lain yang mengkhawatirkan.</p></div></div><a href="${WHATSAPP}" class="mt-10 inline-flex rounded-full bg-coral px-6 py-4 text-sm font-bold text-white">Diskusikan kebutuhan Anda →</a></article>`, item.title);
   configureArticleFeaturedMedia(item);
   if (item.body) {
@@ -736,7 +730,7 @@ async function loadManagedContent() {
       }];
     }));
     services = payload.services_managed ? managedServices : { ...services, ...managedServices };
-    articles = { ...articles, ...managedArticles };
+    articles = managedArticles;
     if (Array.isArray(payload.specialties)) managedSpecialties = payload.specialties;
     if (Array.isArray(payload.testimonials)) managedTestimonials = payload.testimonials;
     if (Array.isArray(payload.therapy_sessions)) managedTherapySessions = payload.therapy_sessions;

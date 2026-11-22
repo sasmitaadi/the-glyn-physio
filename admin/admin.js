@@ -1,7 +1,7 @@
 const apiUrl = "../api.php";
 const titles = { overview: "Ringkasan", content: "Artikel", "services-management": "Manajemen Layanan", faqs: "FAQ Management", pricing: "Pricing Management", specialties: "Spesialisasi Kami", testimonials: "Testimoni Pasien", "therapy-sessions": "Sesi Terapi", "about-management": "Tentang, Tim & Fasilitas", contacts: "Kontak & sosial", analytics: "Analytics", users: "Pengguna", settings: "Pengaturan & panduan" };
 const descriptions = { overview: "Ringkasan aktivitas dan performa website.", content: "Tulis, tayangkan, dan perbarui artikel atau halaman website.", "services-management": "Kelola card dan detail layanan fisioterapi.", faqs: "Kelola pertanyaan umum pada halaman layanan.", pricing: "Kelola harga paket pada halaman layanan.", specialties: "Kelola kartu Spesialisasi Kami pada beranda.", testimonials: "Kelola foto, video, dan cerita pasien.", "therapy-sessions": "Kelola foto atau video untuk bagian Simak Sesi Terapi Kami.", "about-management": "Kelola metode, komitmen, profil fisioterapis, dan peralatan.", contacts: "Kelola kontak klinik dan akun sosial yang tampil di website.", analytics: "Pantau interaksi pengunjung selama 30 hari.", users: "Kelola akses pengguna dashboard.", settings: "Manual book penggunaan dashboard The Glyn Physio." };
-const state = { csrf: "", user: null, contents: [], faqs: [], pricing: [], specialties: [], testimonials: [], therapySessions: [], aboutItems: [], links: [], users: [], analytics: null, googleReview: null, businessHours: [] };
+const state = { csrf: "", user: null, contents: [], faqs: [], pricing: [], specialties: [], testimonials: [], therapySessions: [], aboutItems: [], links: [], users: [], analytics: null, analyticsPeriod: 30, googleReview: null, businessHours: [] };
 
 function setSidebarOpen(open) {
   const sidebar = document.querySelector("#sidebar");
@@ -784,11 +784,15 @@ async function loadUsers() {
 }
 
 function countEvent(name) { return Number((state.analytics?.counts || []).find(item => item.event_name === name)?.total || 0); }
+function analyticsPeriodLabel(period = state.analyticsPeriod) { return period === 7 ? "7 hari terakhir" : period === 365 ? "12 bulan terakhir" : "30 hari terakhir"; }
 function renderAnalytics() {
   if (!state.analytics) return;
+  state.analyticsPeriod = Number(state.analytics.period || state.analyticsPeriod);
+  const periodLabel = analyticsPeriodLabel();
+  document.querySelectorAll("[data-analytics-period]").forEach(select => { select.value = String(state.analyticsPeriod); });
   const values = [state.analytics.visitors, countEvent("page_view"), countEvent("whatsapp_click") + countEvent("maps_click") + countEvent("email_click"), countEvent("article_click")];
   const labels = ["Pengunjung unik", "Page view", "Klik kontak", "Klik artikel"];
-  document.querySelectorAll("#analytics .metric-card").forEach((card, index) => { card.querySelector(".muted").textContent = labels[index]; card.querySelector("strong").textContent = Number(values[index] || 0).toLocaleString("id-ID"); card.querySelector("small").textContent = "30 hari terakhir"; });
+  document.querySelectorAll("#analytics .metric-card").forEach((card, index) => { card.querySelector(".muted").textContent = labels[index]; card.querySelector("strong").textContent = Number(values[index] || 0).toLocaleString("id-ID"); card.querySelector("small").textContent = periodLabel; });
   const list = document.querySelector("#analytics .rank-list");
   if (list) list.innerHTML = state.analytics.events.length ? state.analytics.events.slice(0, 8).map((item, index) => `<li><span class="rank">${String(index + 1).padStart(2, "0")}</span><div><strong>${escapeHtml(item.event_label || item.event_name)}</strong><small>${escapeHtml(item.page_path)}</small></div><b>${Number(item.total).toLocaleString("id-ID")}</b></li>`).join("") : '<li><span>Belum ada aktivitas pengunjung.</span></li>';
   const sourcePanel = document.querySelector("#analytics .content-grid .panel:last-child");
@@ -798,12 +802,19 @@ function renderAnalytics() {
 
 function renderOverview() {
   const values = [state.analytics?.visitors || 0, countEvent("whatsapp_click"), countEvent("article_click"), countEvent("maps_click")];
-  document.querySelectorAll("#overview .metric-card").forEach((card, index) => { card.querySelector("strong").textContent = Number(values[index] || 0).toLocaleString("id-ID"); card.querySelector("small").textContent = "30 hari terakhir"; });
+  document.querySelectorAll("#overview .metric-card").forEach((card, index) => { card.querySelector("strong").textContent = Number(values[index] || 0).toLocaleString("id-ID"); card.querySelector("small").textContent = analyticsPeriodLabel(); });
   const daily = state.analytics?.daily || [];
   const chart = document.querySelector("#overview .chart-bars");
   if (chart) {
     const maximum = Math.max(1, ...daily.map(item => Number(item.total)));
-    chart.innerHTML = daily.length ? daily.map(item => `<i title="${escapeHtml(item.day)}: ${item.total}" style="height:${Math.max(5, Math.round(Number(item.total) / maximum * 100))}%"></i>`).join("") : '<span class="muted">Belum ada page view dalam 30 hari terakhir.</span>';
+    chart.innerHTML = daily.length ? daily.map(item => `<i title="${escapeHtml(item.day)}: ${item.total}" style="height:${Math.max(5, Math.round(Number(item.total) / maximum * 100))}%"></i>`).join("") : `<span class="muted">Belum ada page view dalam ${analyticsPeriodLabel()}.</span>`;
+  }
+  const chartDescription = document.querySelector("#overview .chart-panel .panel-heading .muted");
+  if (chartDescription) chartDescription.textContent = `Total kunjungan ${analyticsPeriodLabel()}`;
+  const chartLabels = document.querySelector("#overview .chart-labels");
+  if (chartLabels) {
+    const indexes = daily.length > 2 ? [0, Math.floor((daily.length - 1) / 2), daily.length - 1] : daily.map((_, index) => index);
+    chartLabels.innerHTML = indexes.map(index => `<span>${escapeHtml(daily[index]?.day || "")}</span>`).join("");
   }
   const popular = document.querySelector("#overview .rank-list");
   if (popular) popular.innerHTML = (state.analytics?.events || []).slice(0, 4).map((item, index) => `<li><span class="rank">${String(index + 1).padStart(2, "0")}</span><div><strong>${escapeHtml(item.event_label || item.event_name)}</strong><small>${escapeHtml(item.page_path)}</small></div><b>${Number(item.total).toLocaleString("id-ID")}</b></li>`).join("") || '<li><span class="muted">Belum ada data interaksi.</span></li>';
@@ -811,7 +822,13 @@ function renderOverview() {
   if (body) body.innerHTML = state.contents.slice(0, 5).map(item => `<tr><td><strong>${escapeHtml(item.title)}</strong></td><td>${escapeHtml(item.type)}</td><td><span class="status ${item.status}">${escapeHtml(item.status)}</span></td><td>${formatDate(item.updated_at)}</td></tr>`).join("") || '<tr><td colspan="4">Belum ada aktivitas content.</td></tr>';
 }
 
-async function loadAnalytics() { state.analytics = await api("analytics"); renderAnalytics(); }
+async function loadAnalytics(period = state.analyticsPeriod) {
+  state.analyticsPeriod = [7, 30, 365].includes(Number(period)) ? Number(period) : 30;
+  const selectors = document.querySelectorAll("[data-analytics-period]");
+  selectors.forEach(select => { select.disabled = true; });
+  try { state.analytics = await api(`analytics&period=${state.analyticsPeriod}`); renderAnalytics(); }
+  finally { selectors.forEach(select => { select.disabled = false; }); }
+}
 
 document.addEventListener("click", async event => {
   const nav = event.target.closest("[data-view], [data-view-target]");
@@ -891,6 +908,7 @@ async function init() {
   document.querySelectorAll("#faqs .faq-toolbar select").forEach(select => select.addEventListener("change", renderFaqs));
   document.querySelector("#pricing .pricing-toolbar input").addEventListener("input", renderPricing);
   document.querySelectorAll("#pricing .pricing-toolbar select").forEach(select => select.addEventListener("change", renderPricing));
+  document.querySelectorAll("[data-analytics-period]").forEach(select => select.addEventListener("change", () => loadAnalytics(select.value)));
   await Promise.all([loadContents(), loadFaqs(), loadPricing(), loadHomepageModules(), loadAboutItems(), loadResources(), loadAnalytics(), loadUsers()]);
   showView(location.hash.slice(1) || "overview");
 }
