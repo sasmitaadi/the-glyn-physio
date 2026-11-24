@@ -779,6 +779,10 @@ function initGTranslate() {
     selector.dispatchEvent(new Event("change", { bubbles: true }));
   };
   renderLanguage(selectedLanguage === "en" ? "id" : selectedLanguage);
+  window.setTimeout(() => {
+    renderLanguage(selectedLanguage);
+    applyLanguage(selectedLanguage);
+  }, 2000);
   trigger.addEventListener("click", event => {
     event.stopPropagation();
     const open = menu.hidden;
@@ -809,7 +813,6 @@ function initGTranslate() {
   script.defer = true;
   script.addEventListener("load", () => {
     switcher.classList.add("translation-ready");
-    setTimeout(() => renderLanguage(selectedLanguage), 3000);
   });
   script.addEventListener("error", () => {
     trigger.title = "Terjemahan tidak tersedia. Periksa koneksi internet.";
