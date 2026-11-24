@@ -809,7 +809,7 @@ function initGTranslate() {
   script.defer = true;
   script.addEventListener("load", () => {
     switcher.classList.add("translation-ready");
-    setTimeout(() => renderLanguage(selectedLanguage), 1000);
+    setTimeout(() => renderLanguage(selectedLanguage), 3000);
   });
   script.addEventListener("error", () => {
     trigger.title = "Terjemahan tidak tersedia. Periksa koneksi internet.";
