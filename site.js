@@ -754,10 +754,11 @@ function initGTranslate() {
 
   const trigger = switcher.querySelector(".language-flag-button");
   const menu = switcher.querySelector(".language-options");
-  const cookieLanguage = document.cookie.match(/(?:^|;\s*)googtrans=\/id\/([a-z-]+)/i)?.[1];
-  let selectedLanguage = ["id", "en"].includes(cookieLanguage) ? cookieLanguage : (localStorage.getItem("glyn-language-choice") || "en");
+  const savedLanguage = localStorage.getItem("glyn-language-choice");
+  let selectedLanguage = ["id", "en"].includes(savedLanguage) ? savedLanguage : "en";
   const renderLanguage = language => {
     selectedLanguage = ["id", "en"].includes(language) ? language : "en";
+    document.documentElement.lang = selectedLanguage;
     const activeFlag = switcher.querySelector("[data-active-language-flag]");
     activeFlag.dataset.language = selectedLanguage;
     activeFlag.textContent = "";
@@ -778,11 +779,7 @@ function initGTranslate() {
     selector.value = option.value;
     selector.dispatchEvent(new Event("change", { bubbles: true }));
   };
-  renderLanguage(selectedLanguage === "en" ? "id" : selectedLanguage);
-  window.setTimeout(() => {
-    renderLanguage(selectedLanguage);
-    applyLanguage(selectedLanguage);
-  }, 2000);
+  renderLanguage(selectedLanguage);
   trigger.addEventListener("click", event => {
     event.stopPropagation();
     const open = menu.hidden;
@@ -813,6 +810,7 @@ function initGTranslate() {
   script.defer = true;
   script.addEventListener("load", () => {
     switcher.classList.add("translation-ready");
+    applyLanguage(selectedLanguage);
   });
   script.addEventListener("error", () => {
     trigger.title = "Terjemahan tidak tersedia. Periksa koneksi internet.";
