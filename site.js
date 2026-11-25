@@ -758,7 +758,6 @@ function initGTranslate() {
   let selectedLanguage = ["id", "en"].includes(savedLanguage) ? savedLanguage : "en";
   const renderLanguage = language => {
     selectedLanguage = ["id", "en"].includes(language) ? language : "en";
-    document.documentElement.lang = selectedLanguage;
     const activeFlag = switcher.querySelector("[data-active-language-flag]");
     activeFlag.dataset.language = selectedLanguage;
     activeFlag.textContent = "";
@@ -772,12 +771,16 @@ function initGTranslate() {
   const closeMenu = () => { menu.hidden = true; trigger.setAttribute("aria-expanded", "false"); };
   const applyLanguage = (language, attempt = 0) => {
     const selector = switcher.querySelector(".gtranslate_wrapper select");
-    if (!selector && attempt < 30) { setTimeout(() => applyLanguage(language, attempt + 1), 150); return; }
-    if (!selector) return;
-    const option = [...selector.options].find(item => item.value === language || item.value.split("|").pop() === language || item.value.split("/").pop() === language);
-    if (!option) return;
+    const option = selector && [...selector.options].find(item => item.value === language || item.value.split("|").pop() === language || item.value.split("/").pop() === language);
+    if (!option && attempt < 30) { setTimeout(() => applyLanguage(language, attempt + 1), 150); return; }
+    if (!option) {
+      switcher.classList.add("translation-error");
+      trigger.title = "Bahasa tidak dapat diterapkan. Coba muat ulang halaman.";
+      return;
+    }
     selector.value = option.value;
     selector.dispatchEvent(new Event("change", { bubbles: true }));
+    document.documentElement.lang = language;
   };
   renderLanguage(selectedLanguage);
   trigger.addEventListener("click", event => {
