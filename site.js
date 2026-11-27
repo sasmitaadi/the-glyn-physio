@@ -111,7 +111,24 @@ function header() {
 }
 
 function footer() {
-  return `<footer class="border-t border-ink/10 bg-ink text-white"><div class="mx-auto grid max-w-7xl gap-10 px-5 py-14 sm:grid-cols-2 lg:grid-cols-[1.2fr_.8fr_1fr_1fr_1.2fr] lg:px-8"><div><p class="text-lg font-extrabold">THE GLYN <span class="text-[#8ed9f5]">PHYSIO</span></p><p class="mt-4 max-w-xs text-sm leading-7 text-white/60">Pendampingan fisioterapi personal untuk membantu Anda bergerak lebih nyaman dan percaya diri.</p><div class="mt-6 flex flex-wrap gap-3"><a class="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 hover:border-[#8ed9f5] hover:text-[#8ed9f5]" href="https://www.instagram.com/theglynphysio" target="_blank" rel="noopener" aria-label="Instagram">${socialIcon("instagram")}</a><a class="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 hover:border-[#8ed9f5] hover:text-[#8ed9f5]" href="https://www.facebook.com/theglynphysio" target="_blank" rel="noopener" aria-label="Facebook">${socialIcon("facebook")}</a><a class="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 hover:border-[#8ed9f5] hover:text-[#8ed9f5]" href="https://www.youtube.com/@theglynphysio" target="_blank" rel="noopener" aria-label="YouTube">${socialIcon("youtube")}</a><a class="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 hover:border-[#8ed9f5] hover:text-[#8ed9f5]" href="https://www.tiktok.com/@theglynphysio" target="_blank" rel="noopener" aria-label="TikTok">${socialIcon("tiktok")}</a></div></div><div><p class="text-sm font-bold text-white">Peta situs</p><nav class="mt-4 flex flex-col gap-3 text-sm text-white/60"><a class="hover:text-white" href="${base}index.html">Beranda</a><a class="hover:text-white" href="${base}about-us/index.html">Tentang kami</a><a class="hover:text-white" href="${base}services/index.html">Layanan</a><a class="hover:text-white" href="${base}article/index.html">Artikel</a></nav></div><div><p class="text-sm font-bold text-white">Lokasi & kontak</p><div class="mt-4 space-y-3 text-sm leading-6 text-white/60"><a class="block hover:text-white" href="https://maps.app.goo.gl/hGmzqtm59Q2mreX16" target="_blank" rel="noopener">Ubud, Bali</a><a class="block hover:text-white" href="tel:+6281234567890">+62 812-3456-7890</a><a class="block break-all hover:text-white" href="mailto:hello@theglynphysio.com">hello@theglynphysio.com</a></div></div><div><p class="text-sm font-bold text-white">Jam buka</p><div class="mt-4 space-y-3 text-sm text-white/60"><div class="flex justify-between gap-4"><span>Senin–Jumat</span><span class="text-white">08.00–20.00</span></div><div class="flex justify-between gap-4"><span>Sabtu</span><span class="text-white">08.00–18.00</span></div><div class="flex justify-between gap-4"><span>Minggu</span><span class="text-white">Dengan janji</span></div></div><a href="${WHATSAPP}" class="mt-6 inline-flex rounded-full bg-coral px-5 py-3 text-xs font-bold text-white hover:bg-[#155f91]">Hubungi via WhatsApp</a></div><div><p class="text-sm font-bold text-white">Google Maps</p><div class="mt-4 overflow-hidden rounded-2xl border border-white/10"><iframe class="h-32 w-full border-0" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3946.139406547566!2d115.24846430000001!3d-8.4858234!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd223c21dd3d7d9%3A0x688ced0c832ba707!2sPhysiotherapy%20Ubud%20(THE%20GLYN%20PHYSIO)!5e0!3m2!1sid!2sid!4v1792619062331!5m2!1sid!2sid" title="Google Maps The Glyn Physio di Ubud" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div><a class="mt-3 block text-sm text-[#8ed9f5] hover:text-white" href="https://maps.app.goo.gl/hGmzqtm59Q2mreX16" target="_blank" rel="noopener">Buka di Google Maps &#8599;</a><div class="mt-3 flex items-center gap-2" aria-label="Rating Google 5 dari 5"><span class="text-lg tracking-widest text-amber-300" aria-hidden="true">★★★★★</span>  <span class="text-xs text-white/60">5.0 (539 ulasan)</span></div></div></div><div class="border-t border-white/10 px-5 py-5 text-center text-xs text-white/40">© ${new Date().getFullYear()} The Glyn Physio. All rights reserved.</div></footer>`;
+  const footerLinks = managedLinks.filter(item => String(item.placement || "").split(",").map(value => value.trim()).includes("footer"));
+  const contactLinks = footerLinks.filter(item => ["whatsapp", "phone", "email"].includes(item.link_type));
+  const socialLinks = footerLinks.filter(item => item.link_type === "social");
+  const mapsLink = footerLinks.find(item => item.link_type === "google_maps");
+  const socialItems = socialLinks.map(item => {
+    const name = String(item.label || "").toLowerCase();
+    const icon = ["instagram", "facebook", "youtube", "tiktok"].includes(name) ? socialIcon(name) : escapePublic(item.label);
+    return `<a class="flex h-10 min-w-10 items-center justify-center rounded-full border border-white/15 px-3 text-xs hover:border-[#8ed9f5] hover:text-[#8ed9f5]" href="${escapePublic(item.url)}" target="_blank" rel="noopener" aria-label="${escapePublic(item.label)}">${icon}</a>`;
+  }).join("");
+  const contactItems = contactLinks.map(item => `<a class="block break-all hover:text-white" href="${escapePublic(item.url)}">${escapePublic(item.display_text || item.label)}</a>`).join("");
+  const hoursItems = managedBusinessHours.map(item => {
+    const openTime = String(item.open_time || "").slice(0, 5).replace(":", ".");
+    const closeTime = String(item.close_time || "").slice(0, 5).replace(":", ".");
+    const hours = String(item.is_closed) === "1" ? (item.note || "Tutup") : `${openTime}–${closeTime}${item.note ? ` · ${item.note}` : ""}`;
+    return `<div class="flex justify-between gap-4"><span>${escapePublic(item.day_label)}</span><span class="text-right text-white">${escapePublic(hours)}</span></div>`;
+  }).join("");
+  const mapsItem = mapsLink ? `<div><p class="text-sm font-bold text-white">Google Maps</p><a class="mt-4 block text-sm leading-6 text-[#8ed9f5] hover:text-white" href="${escapePublic(mapsLink.url)}" target="_blank" rel="noopener">${escapePublic(mapsLink.display_text || mapsLink.label)} &#8599;</a><div class="mt-3 flex items-center gap-2" aria-label="Rating Google ${Number(managedGoogleReview.rating || 0).toFixed(1)} dari 5"><span class="text-lg tracking-widest text-amber-300" aria-hidden="true">★★★★★</span><span class="text-xs text-white/60">${Number(managedGoogleReview.rating || 0).toFixed(1)} (${Number(managedGoogleReview.review_count || 0).toLocaleString("id-ID")} ulasan)</span></div></div>` : "";
+  return `<footer class="border-t border-ink/10 bg-ink text-white"><div class="mx-auto grid max-w-7xl gap-10 px-5 py-14 sm:grid-cols-2 lg:grid-cols-[1.2fr_.8fr_1fr_1fr_1.2fr] lg:px-8"><div><p class="text-lg font-extrabold">THE GLYN <span class="text-[#8ed9f5]">PHYSIO</span></p><p class="mt-4 max-w-xs text-sm leading-7 text-white/60">Pendampingan fisioterapi personal untuk membantu Anda bergerak lebih nyaman dan percaya diri.</p>${socialItems ? `<div class="mt-6 flex flex-wrap gap-3">${socialItems}</div>` : ""}</div><div><p class="text-sm font-bold text-white">Peta situs</p><nav class="mt-4 flex flex-col gap-3 text-sm text-white/60"><a class="hover:text-white" href="${base}index.html">Beranda</a><a class="hover:text-white" href="${base}about-us/index.html">Tentang kami</a><a class="hover:text-white" href="${base}services/index.html">Layanan</a><a class="hover:text-white" href="${base}article/index.html">Artikel</a></nav></div>${contactItems ? `<div><p class="text-sm font-bold text-white">Kontak</p><div class="mt-4 space-y-3 text-sm leading-6 text-white/60">${contactItems}</div></div>` : ""}${hoursItems ? `<div><p class="text-sm font-bold text-white">Jam buka</p><div class="mt-4 space-y-3 text-sm text-white/60">${hoursItems}</div></div>` : ""}${mapsItem}</div><div class="border-t border-white/10 px-5 py-5 text-center text-xs text-white/40">© ${new Date().getFullYear()} The Glyn Physio. All rights reserved.</div></footer>`;
 }
 
 function videoThumb(video, title, extra = "") {
@@ -142,7 +159,6 @@ function shell(content, title) {
   applyManagedSections();
   applyManagedLinks();
   applyGoogleReview();
-  applyBusinessHours();
   setupAOS();
   setupInteractions();
   setupAnalytics();
@@ -156,27 +172,6 @@ function applyGoogleReview() {
   ratingBox.setAttribute("aria-label", `Rating Google ${rating} dari 5 berdasarkan ${count} ulasan`);
   const text = ratingBox.querySelector("span.text-white\\/60");
   if (text) text.textContent = `${rating} (${count} ulasan)`;
-  if (managedGoogleReview.maps_url) document.querySelectorAll('footer a[href*="maps"]').forEach(link => { link.href = managedGoogleReview.maps_url; });
-}
-
-function applyBusinessHours() {
-  if (!managedBusinessHours.length) return;
-  const heading = [...document.querySelectorAll("footer p")].find(item => item.textContent.trim().toLowerCase() === "jam buka");
-  const container = heading?.parentElement?.querySelector(".space-y-3");
-  if (!container) return;
-  container.replaceChildren(...managedBusinessHours.map(item => {
-    const row = document.createElement("div");
-    row.className = "flex justify-between gap-4";
-    const day = document.createElement("span");
-    day.textContent = item.day_label;
-    const value = document.createElement("span");
-    value.className = "text-right text-white";
-    const openTime = String(item.open_time || "").slice(0, 5).replace(":", ".");
-    const closeTime = String(item.close_time || "").slice(0, 5).replace(":", ".");
-    value.textContent = String(item.is_closed) === "1" ? (item.note || "Tutup") : `${openTime}–${closeTime}${item.note ? ` · ${item.note}` : ""}`;
-    row.append(day, value);
-    return row;
-  }));
 }
 
 function applyManagedLinks() {
