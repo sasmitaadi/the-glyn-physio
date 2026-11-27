@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="admin.css?v=20261122-13" />
+    <link rel="stylesheet" href="admin.css?v=20261127-14" />
   </head>
   <body>
     <div class="app-shell">
@@ -23,7 +23,7 @@
           </div>
           <div class="nav-group">
             <button class="nav-group-toggle" type="button" aria-expanded="false"><span class="nav-group-icon">⌂</span><span>Kelola beranda</span><span class="nav-chevron">⌄</span></button>
-            <div class="nav-submenu" hidden><button class="nav-item" data-view="specialties"><span>•</span> Spesialisasi</button><button class="nav-item" data-view="testimonials"><span>•</span> Testimoni pasien</button><button class="nav-item" data-view="therapy-sessions"><span>•</span> Sesi terapi</button></div>
+            <div class="nav-submenu" hidden><button class="nav-item" data-view="hero-management"><span>•</span> Hero beranda</button><button class="nav-item" data-view="specialties"><span>•</span> Spesialisasi</button><button class="nav-item" data-view="testimonials"><span>•</span> Testimoni pasien</button><button class="nav-item" data-view="therapy-sessions"><span>•</span> Sesi terapi</button></div>
           </div>
           <div class="nav-group">
             <button class="nav-group-toggle" type="button" aria-expanded="false"><span class="nav-group-icon">◈</span><span>Profil klinik</span><span class="nav-chevron">⌄</span></button>
@@ -67,6 +67,8 @@
 
         <section class="view" id="pricing"><div class="section-heading"><div><p class="eyebrow">PRICING MANAGEMENT</p><h2>Harga dan paket</h2><p class="muted">Kelola harga paket yang tampil pada halaman layanan.</p></div><button class="button primary" id="new-price">+ Tambah harga</button></div><div class="toolbar pricing-toolbar"><input type="search" placeholder="Cari paket..." aria-label="Cari paket harga"><select aria-label="Filter layanan"><option value="">Semua layanan</option><option value="general">Harga umum</option><option value="geriatri">Perawatan geriatri</option><option value="pasca-operasi">Pemulihan pasca operasi</option><option value="olahraga">Cedera olahraga</option><option value="umum">Kesehatan umum</option></select><select aria-label="Filter status"><option value="">Semua status</option><option value="1">Tampil</option><option value="0">Disembunyikan</option></select><span class="result-count" id="pricing-result-count">0 harga</span></div><article class="panel"><div class="table-wrap"><table><thead><tr><th>Nama paket</th><th>Harga</th><th>Halaman layanan</th><th>Urutan</th><th>Status</th><th></th></tr></thead><tbody id="pricing-rows"><tr><td colspan="6">Memuat harga…</td></tr></tbody></table></div></article></section>
 
+        <section class="view" id="hero-management"><div class="section-heading"><div><p class="eyebrow">BERANDA</p><h2>Hero halaman beranda</h2><p class="muted">Ubah gambar dan teks utama yang tampil di bagian atas halaman beranda.</p></div><div class="heading-actions"><a class="button secondary" href="../index.html" target="_blank" rel="noopener">Preview halaman ↗</a><button type="button" class="button primary" id="manage-home-hero">Edit hero</button></div></div><article class="panel"><p class="muted">Kelola eyebrow, judul, deskripsi, teks tombol, gambar, dan teks pendamping gambar.</p></article></section>
+
         <section class="view" id="specialties"><div class="section-heading"><div><p class="eyebrow">SPESIALISASI KAMI</p><h2>Manajemen spesialisasi</h2><p class="muted">Atur kartu spesialisasi yang tampil pada beranda.</p></div><button class="button primary" id="new-specialty">+ Tambah spesialisasi</button></div><article class="panel"><div class="table-wrap"><table><thead><tr><th>Judul</th><th>Media</th><th>Halaman tujuan</th><th>Urutan</th><th>Status</th><th></th></tr></thead><tbody id="specialty-rows"><tr><td colspan="6">Memuat spesialisasi…</td></tr></tbody></table></div></article></section>
 
         <section class="view" id="testimonials"><div class="section-heading"><div><p class="eyebrow">TESTIMONI PASIEN</p><h2>Manajemen testimoni</h2><p class="muted">Kelola foto atau video pengalaman pasien pada beranda.</p></div><button class="button primary" id="new-testimonial">+ Tambah testimoni</button></div><article class="panel"><div class="table-wrap"><table><thead><tr><th>Pasien</th><th>Media</th><th>Keterangan</th><th>Urutan</th><th>Status</th><th></th></tr></thead><tbody id="testimonial-rows"><tr><td colspan="6">Memuat testimoni…</td></tr></tbody></table></div></article></section>
@@ -88,6 +90,6 @@
         </section>
       </main>
     </div>
-    <script src="admin.js?v=20261122-17"></script>
+    <script src="admin.js?v=20261127-18"></script>
   </body>
 </html>

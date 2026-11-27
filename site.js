@@ -239,9 +239,36 @@ function applyManagedSections() {
   if (!route.includes("/services/") && !route.includes("/article/") && !route.endsWith("/contact/") && !route.endsWith("/about-us/") && !route.endsWith("/our-clinics/")) {
     const hero = sectionData("home", "hero");
     const heroSection = main.querySelector("section:first-child");
-    if (heroSection && hero.eyebrow) heroSection.querySelector("p")?.replaceChildren(document.createTextNode(hero.eyebrow));
-    if (heroSection && hero.title) heroSection.querySelector("h1")?.replaceChildren(document.createTextNode(hero.title));
-    if (heroSection && hero.description) heroSection.querySelector("h1 + p")?.replaceChildren(document.createTextNode(hero.description));
+    const hasValue = key => Object.prototype.hasOwnProperty.call(hero, key);
+    if (heroSection && hasValue("eyebrow")) heroSection.querySelector("div > p")?.replaceChildren(document.createTextNode(hero.eyebrow));
+    if (heroSection && hasValue("title")) {
+      const heading = heroSection.querySelector("h1");
+      if (heading && hasValue("title_accent") && hero.title_accent) {
+        const accent = document.createElement("span");
+        accent.className = "text-teal";
+        accent.textContent = hero.title_accent;
+        heading.replaceChildren(document.createTextNode(`${hero.title} `), accent);
+      } else heading?.replaceChildren(document.createTextNode(hero.title));
+    }
+    if (heroSection && hasValue("description")) heroSection.querySelector("h1 + p")?.replaceChildren(document.createTextNode(hero.description));
+    if (heroSection && hasValue("cta_primary")) {
+      const button = heroSection.querySelector(".flex a:first-child");
+      if (button) button.replaceChildren(document.createTextNode(`${hero.cta_primary} →`));
+    }
+    if (heroSection && hasValue("cta_secondary")) {
+      const button = heroSection.querySelector(".flex a:nth-child(2)");
+      if (button) button.textContent = hero.cta_secondary;
+    }
+    if (heroSection && hasValue("image")) {
+      const image = heroSection.querySelector(".relative img");
+      if (image) image.src = /^(?:https?:)?\/\//.test(hero.image) ? hero.image : `${base}${String(hero.image).replace(/^\//, "")}`;
+    }
+    if (heroSection && hasValue("image_alt")) {
+      const image = heroSection.querySelector(".relative img");
+      if (image) image.alt = hero.image_alt;
+    }
+    if (heroSection && hasValue("image_label")) heroSection.querySelector(".relative .absolute p")?.replaceChildren(document.createTextNode(hero.image_label));
+    if (heroSection && hasValue("image_caption")) heroSection.querySelector(".relative .absolute p + p")?.replaceChildren(document.createTextNode(hero.image_caption));
     const cta = sectionData("home", "cta");
     const ctaSection = main.querySelector("section:last-child");
     if (ctaSection && cta.title) ctaSection.querySelector("h2")?.replaceChildren(document.createTextNode(cta.title));

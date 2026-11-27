@@ -1,7 +1,7 @@
 const apiUrl = "../api.php";
-const titles = { overview: "Ringkasan", content: "Artikel", "services-management": "Manajemen Layanan", faqs: "FAQ Management", pricing: "Pricing Management", specialties: "Spesialisasi Kami", testimonials: "Testimoni Pasien", "therapy-sessions": "Sesi Terapi", "about-management": "Tentang, Tim & Fasilitas", contacts: "Kontak & sosial", analytics: "Analytics", users: "Pengguna", settings: "Pengaturan & panduan" };
-const descriptions = { overview: "Ringkasan aktivitas dan performa website.", content: "Tulis, tayangkan, dan perbarui artikel atau halaman website.", "services-management": "Kelola card dan detail layanan fisioterapi.", faqs: "Kelola pertanyaan umum pada halaman layanan.", pricing: "Kelola harga paket pada halaman layanan.", specialties: "Kelola kartu Spesialisasi Kami pada beranda.", testimonials: "Kelola foto, video, dan cerita pasien.", "therapy-sessions": "Kelola foto atau video untuk bagian Simak Sesi Terapi Kami.", "about-management": "Kelola metode, komitmen, profil fisioterapis, dan peralatan.", contacts: "Kelola kontak klinik dan akun sosial yang tampil di website.", analytics: "Pantau interaksi pengunjung selama 30 hari.", users: "Kelola akses pengguna dashboard.", settings: "Manual book penggunaan dashboard The Glyn Physio." };
-const state = { csrf: "", user: null, contents: [], faqs: [], pricing: [], specialties: [], testimonials: [], therapySessions: [], aboutItems: [], links: [], users: [], analytics: null, analyticsPeriod: 30, googleReview: null, businessHours: [] };
+const titles = { overview: "Ringkasan", content: "Artikel", "services-management": "Manajemen Layanan", faqs: "FAQ Management", pricing: "Pricing Management", "hero-management": "Hero Beranda", specialties: "Spesialisasi Kami", testimonials: "Testimoni Pasien", "therapy-sessions": "Sesi Terapi", "about-management": "Tentang, Tim & Fasilitas", contacts: "Kontak & sosial", analytics: "Analytics", users: "Pengguna", settings: "Pengaturan & panduan" };
+const descriptions = { overview: "Ringkasan aktivitas dan performa website.", content: "Tulis, tayangkan, dan perbarui artikel atau halaman website.", "services-management": "Kelola card dan detail layanan fisioterapi.", faqs: "Kelola pertanyaan umum pada halaman layanan.", pricing: "Kelola harga paket pada halaman layanan.", "hero-management": "Ubah gambar dan teks utama hero halaman beranda.", specialties: "Kelola kartu Spesialisasi Kami pada beranda.", testimonials: "Kelola foto, video, dan cerita pasien.", "therapy-sessions": "Kelola foto atau video untuk bagian Simak Sesi Terapi Kami.", "about-management": "Kelola metode, komitmen, profil fisioterapis, dan peralatan.", contacts: "Kelola kontak klinik dan akun sosial yang tampil di website.", analytics: "Pantau interaksi pengunjung selama 30 hari.", users: "Kelola akses pengguna dashboard.", settings: "Manual book penggunaan dashboard The Glyn Physio." };
+const state = { csrf: "", user: null, contents: [], faqs: [], pricing: [], homeHero: {}, specialties: [], testimonials: [], therapySessions: [], aboutItems: [], links: [], users: [], analytics: null, analyticsPeriod: 30, googleReview: null, businessHours: [] };
 
 function setSidebarOpen(open) {
   const sidebar = document.querySelector("#sidebar");
@@ -99,7 +99,7 @@ function prepareDashboardUX() {
   document.querySelector("#manage-business-contact").addEventListener("click", openBusinessContactForm);
   document.querySelector("#settings .manual-grid").insertAdjacentHTML("beforeend", '<article class="manual-card"><span>04</span><h3>FAQ</h3><p>Pertanyaan umum pada halaman layanan.</p><button type="button" data-view-target="faqs">Buka FAQ →</button></article>');
   document.querySelector("#settings .manual-grid").insertAdjacentHTML("beforeend", '<article class="manual-card"><span>05</span><h3>Pricing</h3><p>Harga dan paket fisioterapi.</p><button type="button" data-view-target="pricing">Buka pricing →</button></article>');
-  document.querySelector("#settings .manual-grid").insertAdjacentHTML("beforeend", '<article class="manual-card"><span>06</span><h3>Beranda</h3><p>Spesialisasi, testimoni, dan sesi terapi.</p><button type="button" data-view-target="specialties">Buka spesialisasi →</button></article>');
+  document.querySelector("#settings .manual-grid").insertAdjacentHTML("beforeend", '<article class="manual-card"><span>06</span><h3>Hero beranda</h3><p>Ubah teks dan gambar utama di bagian atas halaman beranda.</p><button type="button" data-view-target="hero-management">Edit hero →</button></article>');
   document.querySelector("#settings .manual-grid").insertAdjacentHTML("beforeend", '<article class="manual-card"><span>07</span><h3>Tentang & Tim</h3><p>Metode, komitmen, fisioterapis, dan alat.</p><button type="button" data-view-target="about-management">Buka pengelolaan →</button></article>');
   document.querySelector("#settings .manual-grid").insertAdjacentHTML("beforeend", '<article class="manual-card"><span>08</span><h3>Layanan</h3><p>Card Services dan detail setiap layanan.</p><button type="button" data-view-target="services-management">Buka layanan →</button></article>');
   document.querySelector("#settings .manual-book").insertAdjacentHTML("beforeend", '<details><summary><span>6</span> Cara mengelola FAQ</summary><div class="manual-detail"><ol><li>Buka menu <strong>FAQ</strong>.</li><li>Klik <strong>Tambah FAQ</strong> atau pilih <strong>Edit</strong> pada pertanyaan yang tersedia.</li><li>Isi pertanyaan, jawaban, halaman layanan, urutan, dan status tampil.</li><li>Pilih <strong>Semua halaman layanan</strong> jika pertanyaan berlaku untuk seluruh layanan.</li><li>Klik <strong>Simpan</strong>, lalu periksa halaman layanan terkait.</li></ol></div></details>');
@@ -107,6 +107,7 @@ function prepareDashboardUX() {
   document.querySelector("#settings .manual-book").insertAdjacentHTML("beforeend", '<details><summary><span>8</span> Spesialisasi, testimoni, dan sesi terapi</summary><div class="manual-detail"><ol><li>Gunakan menu <strong>Spesialisasi</strong> untuk kartu layanan pada beranda.</li><li>Gunakan menu <strong>Testimoni</strong> untuk foto/video dan cerita pasien.</li><li>Gunakan menu <strong>Sesi terapi</strong> untuk foto Google Drive, URL gambar, atau video YouTube.</li><li>Untuk Google Drive, tempel link berbagi atau ID file dan pastikan aksesnya <strong>Siapa saja yang memiliki link</strong>.</li><li>Atur urutan dan status, kemudian klik <strong>Simpan</strong>.</li></ol></div></details>');
   document.querySelector("#settings .manual-book").insertAdjacentHTML("beforeend", '<details><summary><span>9</span> Metode, komitmen, fisioterapis, dan alat</summary><div class="manual-detail"><ol><li>Buka menu <strong>Tentang, tim & alat</strong>.</li><li>Pilih tombol tambah pada kelompok yang ingin dikelola.</li><li>Pilih media berupa upload foto, URL foto, foto/video Google Drive, atau YouTube.</li><li>Preview media akan muncul sebelum data disimpan.</li><li>Pastikan file Google Drive dapat diakses oleh siapa saja yang memiliki link.</li></ol></div></details>');
   document.querySelector("#settings .manual-book").insertAdjacentHTML("beforeend", '<details><summary><span>10</span> Cara mengelola layanan</summary><div class="manual-detail"><ol><li>Buka menu <strong>Konten & layanan → Layanan</strong>.</li><li>Klik <strong>Tambah layanan</strong> atau pilih Edit pada layanan yang tersedia.</li><li>Isi nama, tagline card, deskripsi halaman, dan daftar perawatan.</li><li>Pilih media berupa upload foto, URL foto, Google Drive, atau YouTube.</li><li>Atur urutan dan status Tayang, lalu klik <strong>Simpan</strong>.</li></ol></div></details>');
+  document.querySelector("#settings .manual-book").insertAdjacentHTML("beforeend", '<details><summary><span>11</span> Cara mengubah hero beranda</summary><div class="manual-detail"><ol><li>Buka menu <strong>Kelola beranda → Hero beranda</strong>.</li><li>Klik <strong>Edit hero</strong>, lalu ubah teks utama, deskripsi, teks tombol, dan teks pendamping gambar.</li><li>Pilih upload foto JPG, PNG, atau WebP (maksimal 5 MB), atau masukkan URL gambar publik.</li><li>Periksa preview gambar, lalu klik <strong>Simpan</strong>.</li><li>Buka halaman beranda dan refresh untuk memeriksa perubahan.</li></ol></div></details>');
 }
 
 function formPanel(id, title, fields, submitLabel = "Simpan") {
@@ -556,6 +557,67 @@ async function loadHomepageModules() {
   renderHomepageModules();
 }
 
+const defaultHomeHero = {
+  eyebrow: "Fisioterapi personal berbasis bukti",
+  title: "Kembali bergerak.",
+  title_accent: "Kembali menjadi diri Anda.",
+  description: "Pendampingan fisioterapi yang hangat, terarah, dan disusun sesuai aktivitas serta tujuan pemulihan Anda.",
+  cta_primary: "Konsultasi sekarang",
+  cta_secondary: "Lihat spesialisasi",
+  image: "assets/team1.jpg",
+  image_alt: "Fisioterapis mendampingi pasien",
+  image_label: "Pendekatan personal",
+  image_caption: "Satu tujuan, satu rencana."
+};
+
+async function loadHomepageHero() {
+  state.homeHero = (await api("homepage-hero")).data;
+}
+
+function homeHeroFields(item = {}) {
+  const hero = { ...defaultHomeHero, ...item };
+  const url = String(hero.image || "");
+  const source = url.startsWith("uploads/") ? "upload" : "image_url";
+  return `<label class="wide">Teks kecil di atas judul<input name="eyebrow" maxlength="180" value="${escapeHtml(hero.eyebrow)}"></label><label class="wide">Judul utama<input name="title" maxlength="255" value="${escapeHtml(hero.title)}" required></label><label class="wide">Lanjutan judul berwarna<input name="title_accent" maxlength="255" value="${escapeHtml(hero.title_accent)}"></label><label class="wide">Deskripsi<textarea name="description" rows="3" maxlength="2000">${escapeHtml(hero.description)}</textarea></label><label>Teks tombol utama<input name="cta_primary" maxlength="120" value="${escapeHtml(hero.cta_primary)}"></label><label>Teks tombol kedua<input name="cta_secondary" maxlength="120" value="${escapeHtml(hero.cta_secondary)}"></label><input type="hidden" name="current_media_url" value="${escapeHtml(url)}"><label>Jenis gambar<select name="media_source"><option value="upload" ${source === "upload" ? "selected" : ""}>Upload foto</option><option value="image_url" ${source === "image_url" ? "selected" : ""}>URL foto langsung</option></select></label><label class="wide homepage-upload-field">Pilih file foto<input name="media_file" type="file" accept="image/jpeg,image/png,image/webp"><small>JPG, PNG, atau WebP, maksimal 5 MB.</small></label><label class="wide homepage-link-field">URL gambar<input name="media_input" inputmode="url" autocomplete="url" value="${source === "upload" ? "" : escapeHtml(url)}" placeholder="https://domain.com/foto.jpg"><small>Tempel URL publik gambar yang diawali http:// atau https://.</small></label><div class="wide about-media-preview" data-homepage-media-preview><span>Preview gambar akan tampil di sini.</span></div><label class="wide">Alt text gambar<input name="image_alt" maxlength="255" value="${escapeHtml(hero.image_alt)}"></label><label>Teks label pada gambar<input name="image_label" maxlength="120" value="${escapeHtml(hero.image_label)}"></label><label>Teks pendamping gambar<input name="image_caption" maxlength="180" value="${escapeHtml(hero.image_caption)}"></label>`;
+}
+
+function openHomepageHeroForm() {
+  const hero = { ...defaultHomeHero, ...state.homeHero };
+  if (Object.prototype.hasOwnProperty.call(state.homeHero, "title") && !Object.prototype.hasOwnProperty.call(state.homeHero, "title_accent")) hero.title_accent = "";
+  insertForm(formPanel("home-hero-form", "Edit hero halaman beranda", homeHeroFields(hero)), async form => {
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+    const imageFile = formData.get("media_file");
+    if (data.media_source === "upload") {
+      data.image = imageFile && imageFile.size ? await uploadFeaturedImage(imageFile) : data.current_media_url;
+      if (!data.image) throw new Error("Pilih file foto yang akan diupload.");
+    } else {
+      data.image = String(data.media_input || "").trim();
+      if (!/^https?:\/\//.test(data.image)) throw new Error("Masukkan URL gambar langsung yang valid.");
+    }
+    delete data.media_source; delete data.media_input; delete data.media_file; delete data.current_media_url;
+    state.homeHero = (await api("homepage-hero", { method: "POST", body: JSON.stringify(data) })).data;
+  });
+  const form = document.querySelector("#home-hero-form");
+  const source = form.querySelector("[name=media_source]");
+  const file = form.querySelector("[name=media_file]");
+  const input = form.querySelector("[name=media_input]");
+  const preview = form.querySelector("[data-homepage-media-preview]");
+  const uploadField = form.querySelector(".homepage-upload-field");
+  const linkField = form.querySelector(".homepage-link-field");
+  const current = form.querySelector("[name=current_media_url]").value;
+  const updatePreview = () => {
+    const upload = source.value === "upload";
+    uploadField.hidden = !upload;
+    linkField.hidden = upload;
+    renderMediaPreview(preview, "image", upload ? (file.files[0] ? URL.createObjectURL(file.files[0]) : current) : input.value.trim());
+  };
+  source.addEventListener("change", updatePreview);
+  file.addEventListener("change", updatePreview);
+  input.addEventListener("input", updatePreview);
+  updatePreview();
+}
+
 const aboutSectionLabels = { methods: "Metode fisioterapi", commitments: "Komitmen kami", therapists: "Fisioterapis kami", equipment: "Kelengkapan alat kami" };
 
 function aboutItemFields(section, item = {}) {
@@ -897,6 +959,7 @@ async function init() {
   document.querySelector("#new-service").addEventListener("click", () => openServiceForm());
   document.querySelector("#new-faq").addEventListener("click", () => openFaqForm());
   document.querySelector("#new-price").addEventListener("click", () => openPricingForm());
+  document.querySelector("#manage-home-hero").addEventListener("click", openHomepageHeroForm);
   document.querySelector("#new-specialty").addEventListener("click", () => openHomepageForm("specialties"));
   document.querySelector("#new-testimonial").addEventListener("click", () => openHomepageForm("testimonials"));
   document.querySelector("#new-therapy-session").addEventListener("click", () => openHomepageForm("therapy-sessions"));
@@ -909,7 +972,7 @@ async function init() {
   document.querySelector("#pricing .pricing-toolbar input").addEventListener("input", renderPricing);
   document.querySelectorAll("#pricing .pricing-toolbar select").forEach(select => select.addEventListener("change", renderPricing));
   document.querySelectorAll("[data-analytics-period]").forEach(select => select.addEventListener("change", () => loadAnalytics(select.value)));
-  await Promise.all([loadContents(), loadFaqs(), loadPricing(), loadHomepageModules(), loadAboutItems(), loadResources(), loadAnalytics(), loadUsers()]);
+  await Promise.all([loadContents(), loadFaqs(), loadPricing(), loadHomepageHero(), loadHomepageModules(), loadAboutItems(), loadResources(), loadAnalytics(), loadUsers()]);
   showView(location.hash.slice(1) || "overview");
 }
 

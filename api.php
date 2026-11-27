@@ -165,6 +165,42 @@ try {
 
     $user = requireUser();
 
+    if ($action === 'homepage-hero') {
+        if ($method === 'GET') {
+            $statement = $pdo->prepare("SELECT content_json FROM site_sections WHERE page_key='home' AND section_key='hero' LIMIT 1");
+            $statement->execute();
+            $content = json_decode((string) $statement->fetchColumn(), true);
+            jsonResponse(['ok' => true, 'data' => is_array($content) ? $content : []]);
+        }
+        if ($method !== 'POST') jsonResponse(['ok' => false, 'error' => 'Method not allowed'], 405);
+        $data = mutableRequest();
+        $image = requiredString($data, 'image', 1000);
+        list(, $image) = normalizeFeaturedMedia('image', $image);
+        $content = [
+            'eyebrow' => substr(trim((string) ($data['eyebrow'] ?? '')), 0, 180),
+            'title' => requiredString($data, 'title', 255),
+            'title_accent' => substr(trim((string) ($data['title_accent'] ?? '')), 0, 255),
+            'description' => substr(trim((string) ($data['description'] ?? '')), 0, 2000),
+            'cta_primary' => substr(trim((string) ($data['cta_primary'] ?? '')), 0, 120),
+            'cta_secondary' => substr(trim((string) ($data['cta_secondary'] ?? '')), 0, 120),
+            'image' => $image,
+            'image_alt' => substr(trim((string) ($data['image_alt'] ?? '')), 0, 255),
+            'image_label' => substr(trim((string) ($data['image_label'] ?? '')), 0, 120),
+            'image_caption' => substr(trim((string) ($data['image_caption'] ?? '')), 0, 180)
+        ];
+        $json = json_encode($content, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $statement = $pdo->prepare("UPDATE site_sections SET title='Hero homepage',content_json=:content,updated_by=:updated_by WHERE page_key='home' AND section_key='hero'");
+        $statement->execute([':content' => $json, ':updated_by' => $user['id']]);
+        if ($statement->rowCount() === 0) {
+            $exists = $pdo->query("SELECT id FROM site_sections WHERE page_key='home' AND section_key='hero' LIMIT 1")->fetchColumn();
+            if (!$exists) {
+                $insert = $pdo->prepare("INSERT INTO site_sections (page_key,section_key,title,content_json,sort_order,updated_by) VALUES ('home','hero','Hero homepage',:content,1,:updated_by)");
+                $insert->execute([':content' => $json, ':updated_by' => $user['id']]);
+            }
+        }
+        jsonResponse(['ok' => true, 'data' => $content]);
+    }
+
     if ($action === 'business-contact') {
         if ($method !== 'POST') jsonResponse(['ok' => false, 'error' => 'Method not allowed'], 405);
         $data = mutableRequest();
